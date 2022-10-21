@@ -48,7 +48,9 @@ func main() {
 			if ok {
 				note.UUID = update.Message.Chat.ID
 				if err := store.PutNote(note); err != nil {
+					log.Println(DatabaseError)
 					msg.Text = DatabaseError
+					bot.Send(msg)
 					continue
 				}
 				msg.Text = RequestSuccess

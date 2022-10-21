@@ -1,0 +1,21 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+  
+  finbot:
+    build: .
+    container_name: finbot
+    restart: always
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      TOKEN: ${TOKEN}
