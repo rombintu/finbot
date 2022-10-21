@@ -46,6 +46,7 @@ func main() {
 
 			note, ok := tools.Filter(update.Message.Text)
 			if ok {
+				note.UUID = update.Message.Chat.ID
 				if err := store.PutNote(note); err != nil {
 					msg.Text = DatabaseError
 					continue

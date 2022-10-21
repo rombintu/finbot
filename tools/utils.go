@@ -7,22 +7,35 @@ import (
 )
 
 type Note struct {
+	UUID      int64
 	Cost      int
 	Category  string
 	Comment   string
 	Timestamp time.Time
 }
 
+func tryFindMore(target string) (int, bool, error) {
+	r := []rune(target)
+	if r[len(r)-1] == rune('к') {
+		cost, err := strconv.Atoi(string(r[:len(r)-1]))
+		if err != nil {
+			return -1, false, err
+		}
+		return cost * 1000, true, nil
+	}
+	return -1, false, nil
+}
+
 // returned Cost, []Index, isFind
 func findCost(target []string) (int, int, bool) {
 	for i, s := range target {
 		cost, err := strconv.Atoi(s)
-		if err != nil {
-			continue
-		} else {
-			if cost > 0 {
-				return cost, i, true
-			}
+		if err == nil && cost > 0 {
+			return cost, i, true
+		}
+		cost, ok, err := tryFindMore(s)
+		if ok && err == nil && cost > 0 {
+			return cost, i, true
 		}
 	}
 	return -1, 0, false
@@ -45,9 +58,9 @@ func Filter(target string) (Note, bool) {
 	}
 	comment := ""
 	sWithoutCost := removeByIndex(s, idx)
-	category := sWithoutCost[0]
+	category := strings.ToLower(sWithoutCost[0])
 	if withComment {
-		comment = strings.Join(sWithoutCost[0:], " ")
+		comment = strings.Join(sWithoutCost[1:], " ")
 	}
 	return Note{
 		Cost:      cost,

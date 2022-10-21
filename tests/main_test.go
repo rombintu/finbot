@@ -15,6 +15,7 @@ type Toster struct {
 
 func TestNewNote(t *testing.T) {
 	tosters := []Toster{
+		{"TestK", "100к Food", true},
 		{"Test1", "100 Food", true},
 		{"Test2", "Food 100", true},
 		{"Test3", "00 Food", false},
