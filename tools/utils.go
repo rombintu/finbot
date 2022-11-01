@@ -73,3 +73,15 @@ func Filter(target string) (Note, bool) {
 func removeByIndex(s []string, idx int) []string {
 	return append(s[:idx], s[idx+1:]...)
 }
+
+func Unique(slice []string) []string {
+	keys := make(map[string]bool)
+	list := []string{}
+	for _, entry := range slice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
+}
