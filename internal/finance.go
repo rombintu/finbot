@@ -31,13 +31,13 @@ func (s *Store) PutNote(note tools.Note) error {
 	return nil
 }
 
-func (s *Store) GetCategories() ([]string, error) {
+func (s *Store) GetCategories(userID int64) ([]string, error) {
 	ctx, err := s.Open()
 	if err != nil {
 		return []string{}, err
 	}
 	defer s.Close(ctx)
-	cur, err := s.Database.Collection(TABLE).Find(ctx, bson.M{})
+	cur, err := s.Database.Collection(TABLE).Find(ctx, bson.M{"uuid": userID})
 	if err != nil {
 		return []string{}, err
 	}
@@ -53,7 +53,7 @@ func (s *Store) GetCategories() ([]string, error) {
 	return tools.Unique(categories), nil
 }
 
-func (s *Store) GetNotesByMonth() (map[string]int, error) {
+func (s *Store) GetNotesByMonth(userID int64) (map[string]int, error) {
 	ctx, err := s.Open()
 	if err != nil {
 		return map[string]int{}, err
@@ -61,7 +61,7 @@ func (s *Store) GetNotesByMonth() (map[string]int, error) {
 	defer s.Close(ctx)
 	cur, err := s.Database.Collection(TABLE).Find(ctx, bson.M{"timestamp": bson.M{
 		"$gte": primitive.NewDateTimeFromTime(time.Now().AddDate(0, 0, -30)),
-	}})
+	}, "uuid": userID})
 	if err != nil {
 		return map[string]int{}, err
 	}

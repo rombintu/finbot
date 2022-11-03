@@ -47,7 +47,7 @@ func main() {
 
 			switch update.Message.Command() {
 			case "list":
-				categories, err := store.GetCategories()
+				categories, err := store.GetCategories(update.Message.From.ID)
 				if err != nil {
 					msg.Text = DatabaseError + err.Error()
 					bot.Send(msg)
@@ -61,7 +61,7 @@ func main() {
 				bot.Send(msg)
 				continue
 			case "month":
-				payload, err := store.GetNotesByMonth()
+				payload, err := store.GetNotesByMonth(update.Message.From.ID)
 				if err != nil {
 					msg.Text = DatabaseError + err.Error()
 					bot.Send(msg)
